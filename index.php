@@ -10,26 +10,48 @@ include("utils/DB.php")
 <head>
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" href="icons/icon.png">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <title>Movies - Home</title>
 
 </head>
-
-<ul>
-    <li><a class="active" href="index.php">Home</a></li>
-    <li><a href="addFilm.php">Add Movie</a></li>
-<?php
-if(isset($_SESSION["username"])){
-    echo '<li style="float:right; margin-right:20px;"><a href="logout.php">Logout (' . $_SESSION["username"] . ')</a></li>';
-}else{
-    echo '<li style="float:right; margin-right:2%;"><a href="login.php">Login</a></li>
-    <li style="float:right;"><a href="register.php">Register</a></li>';
-}
-?>
-
-</ul>
-<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-end">
+    <ul class="navbar-nav mr-auto">
+        <li class="navbar-item active">
+            <a class="nav-link" href="index.php">Home</a>
+        </li>
+        <li class="navbar-item">
+            <a class="nav-link" href="addFilm.php">Add Movie</a>
+        </li>
+    </ul>
+    <div>
+    <ul class="navbar-nav mr-auto">
     <?php
+    if(isset($_SESSION["username"])){
+        echo '
+        <li class="navbar-item ">
+            <a class="nav-link" href="logout.php">Logout (' . $_SESSION["username"] . ')</a>
+        </li>';
+    }else{
+        echo '
+        <li class="navbar-item">
+            <a class="nav-link" href="login.php">Login</a>
+        </li>
+        <li class="navbar-item">
+            <a class="nav-link" href="register.php">Register</a>
+        </li>';
+    }
+    ?>
+
+    </ul>
+</div>
+</nav>
+<body class="bg-secondary">
+    <?php 
 
     $db = new DB();
     if (!$db->ok()) {
@@ -49,18 +71,17 @@ if(isset($_SESSION["username"])){
     }
     
     if (isset($_SESSION["username"])) {
-    
-    echo '<label>
+        $query = $db -> query('SELECT title,year,runtime,director,imdb,rt,uf.watched FROM film f inner join UserFilm uf on (uf.fid = f.fid) WHERE uf.uid = ? ORDER BY f.title', [$_SESSION["uid"]]);
+        ?>
+        
+        <div class="container-lr my-3">
+        <label>
         Search bux
         <input id="search-field" type="search" />
         </label>
-        <button id="random-movie" value="false">Random movie</button>
-        <button id="random-movie-including" value="true">Random movie</button>';
-
-        $query = $db -> query('SELECT title,year,runtime,director,imdb,rt,uf.watched FROM film f inner join UserFilm uf on (uf.fid = f.fid) WHERE uf.uid = ? ORDER BY f.title', [$_SESSION["uid"]]);
-
-        echo '<div style="padding-left:5%; padding-right:10%">
-        <table id="tabelOfMovies">
+        <button id="random-movie" value="false">Random unwatched movie</button>
+        <button id="random-movie-including" value="true">Random any movie</button>
+        <table id="tabelOfMovies" class="text-light">
             <th>Movie name</th>
             <th>Director</th>
             <th>Year</th>
@@ -68,7 +89,8 @@ if(isset($_SESSION["username"])){
             <th>IMDB rating</th>
             <th>RT rating</th>
             <th>Watched</th>
-            <th>Remove</th>';
+            <th>Remove</th>
+        <?php
         foreach ($query as $key => $val) {
             echo '<tr>';
                 echo '<td>' . $val["title"] . '</td>';
@@ -80,7 +102,7 @@ if(isset($_SESSION["username"])){
                 echo '<td>';
                 echo ($val["watched"])? '<a class="watched" href="index.php?filmName=' . $val["title"]  .'&watched=0"> &#10003 </a>':  '<a class="notWatched" href="index.php?filmName=' . $val["title"]  .'&watched=1"> &#x2717 </a>';
                 echo '</td>';
-                echo '<td> <a class="notWatched" href="index.php?remove=' . $val["title"]  .'"> &#x2717 </a></td>';
+                echo '<td> <a class="removeMovie" href="index.php?remove=' . $val["title"]  .'"> &#x2717 </a></td>';
             echo '</tr>';
         }
 
@@ -88,14 +110,18 @@ if(isset($_SESSION["username"])){
     } else {
         $query = $db -> query('SELECT title,year,runtime,director,imdb,rt FROM film');
 
-        echo '<div style="padding-left:5%; padding-right:10%">
-        <table style="text-align:centre">
+        ?>
+        
+        <div class="container-lr my-3">
+        <table class="text-light">
             <th>Movie name</th>
             <th>Director</th>
             <th>Year</th>
             <th>Runtime</th>
             <th>IMDB rating</th>
-            <th>RT rating</th>';
+            <th>RT rating</th>
+
+        <?php
             foreach ($query as $key => $val) {
                 echo '<tr>';
                 echo '<td>' . $val["title"] . '</td>';
@@ -127,7 +153,7 @@ if(isset($_SESSION["username"])){
                     <td>${el["imdb"]}</td>
                     <td>${el["rt"]}</td>`;
                     (el["watched"] == 1) ? str += '<td><a class="watched" href="index.php?filmName=' + el["title"]  + '&watched=0"> &#10003 </a></td>': str += '<td><a class="notWatched" href="index.php?filmName=' + el["title"] + '&watched=1"> &#x2717 </a></td>';
-                    str += '<td> <a class="notWatched" href="index.php?remove=' + el["title"]  + '"> &#x2717 </a></td>';
+                    str += '<td> <a class="removeMovie" href="index.php?remove=' + el["title"]  + '"> &#x2717 </a></td>';
                     str += "</tr>"
                     $("#tabelOfMovies").append(str);
                 });
