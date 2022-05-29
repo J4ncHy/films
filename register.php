@@ -75,7 +75,7 @@ include("utils/db.php");
 
     if (isset($_POST["submit"])) {
         $pass = password_hash($_POST["password"], PASSWORD_BCRYPT, $options);
-        $res = $db->query('SELECT name,mail from user where name = ? OR mail = ?', [$_POST['username'], $_POST["email"]]);
+        $res = $db->query('SELECT name,mail from user where name = ? OR mail = ?', [htmlspecialchars($_POST['username']), htmlspecialchars($_POST["email"])]);
 
         if(count($res)){
             $row = $res[0];
@@ -85,7 +85,7 @@ include("utils/db.php");
                 echo '<p class="h3 text-center text-danger">USERNAME already used!</p>';
             } 
         }else {
-            $db->query('INSERT INTO user(name,mail,password_hash,status,date_created) values (?, ?, ?, 1, now())', [$_POST["username"], $_POST["email"], $pass]);
+            $db->query('INSERT INTO user(name,mail,password_hash,status,date_created) values (?, ?, ?, 1, now())', [htmlspecialchars($_POST["username"]), htmlspecialchars($_POST["email"]), $pass]);
             header("Location: login.php");
         }
     }

@@ -34,7 +34,7 @@ include("utils/DB.php")
     if(isset($_SESSION["username"])){
         echo '
         <li class="navbar-item ">
-            <a class="nav-link" href="logout.php">Logout (' . $_SESSION["username"] . ')</a>
+            <a class="nav-link" href="logout.php">Logout (' . htmlspecialchars($_SESSION["username"]) . ')</a>
         </li>';
     }else{
         echo '
@@ -59,19 +59,19 @@ include("utils/DB.php")
     }
 
     if(isset($_GET["filmName"]) && isset($_GET["watched"])){
-        $db -> query("UPDATE UserFilm SET watched=? WHERE fid=(SELECT fid from film where title=?) AND uid=?", [$_GET["watched"],$_GET["filmName"], $_SESSION["uid"]]);
+        $db -> query("UPDATE UserFilm SET watched=? WHERE fid=(SELECT fid from film where title=?) AND uid=?", [htmlspecialchars($_GET["watched"]),htmlspecialchars($_GET["filmName"]), htmlspecialchars($_SESSION["uid"])]);
         if(!$db) die("Napaka! ".$db->getError());
         header("Location: index.php");
     }
 
     if(isset($_GET["remove"])){
-        $db -> query('DELETE FROM UserFilm WHERE FID=(SELECT fid FROM film WHERE title=?) AND uid = ?', [$_GET["remove"], $_SESSION["uid"]]);
+        $db -> query('DELETE FROM UserFilm WHERE FID=(SELECT fid FROM film WHERE title=?) AND uid = ?', [htmlspecialchars($_GET["remove"]), htmlspecialchars($_SESSION["uid"])]);
         if(!$db) die("Napaka! ".$db->getError());
         header("Location: index.php");
     }
     
     if (isset($_SESSION["username"])) {
-        $query = $db -> query('SELECT title,year,runtime,director,imdb,rt,uf.watched FROM film f inner join UserFilm uf on (uf.fid = f.fid) WHERE uf.uid = ? ORDER BY f.title', [$_SESSION["uid"]]);
+        $query = $db -> query('SELECT title,year,runtime,director,imdb,rt,uf.watched FROM film f inner join UserFilm uf on (uf.fid = f.fid) WHERE uf.uid = ? ORDER BY f.title', [htmlspecialchars($_SESSION["uid"])]);
         ?>
         
         <div class="container-lr my-3">

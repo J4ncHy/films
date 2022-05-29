@@ -108,9 +108,9 @@ include("utils/db.php");
                 }
 
                 if (empty($row)) {
-                    $db -> query('INSERT INTO film(title,year,runtime,director,imdb,rt) VALUES (?,?,?,?,?,?)', [$_POST["naslov"], $_POST["year"], $_POST["runtime"], $_POST["director"], $_POST["imdb"], $_POST["rt"]]);
+                    $db -> query('INSERT INTO film(title,year,runtime,director,imdb,rt) VALUES (?,?,?,?,?,?)', [htmlspecialchars($_POST["naslov"]), htmlspecialchars($_POST["year"]), htmlspecialchars($_POST["runtime"]), htmlspecialchars($_POST["director"]), htmlspecialchars($_POST["imdb"]), htmlspecialchars($_POST["rt"])]);
                 }
-                $db -> query('INSERT INTO UserFilm values((select fid from film where title = ?),?,?)', [$_POST["naslov"], $_SESSION["uid"], isset($_POST["watched"])? true: false]);
+                $db -> query('INSERT INTO UserFilm values((select fid from film where title = ?),?,?)', [htmlspecialchars($_POST["naslov"]), htmlspecialchars($_SESSION["uid"]), isset($_POST["watched"])? true: false]);
                 echo '<p class="text-success">Success!</p>';
         } 
     }else header("Location: login.php");

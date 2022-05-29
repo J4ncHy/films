@@ -74,10 +74,10 @@ include("utils/db.php");
     ];
 
     if (isset($_POST["submit"])) {
-        $row = $db -> query('SELECT uid,name,password_hash from user where name = ?', [$_POST["username"]]);
+        $row = $db -> query('SELECT uid,name,password_hash from user where name = ?', [htmlspecialchars($_POST["username"])]);
         if(count($row)){
             $row = $row[0];
-            if (password_verify($_POST["password"], $row["password_hash"])) {
+            if (password_verify(htmlspecialchars($_POST["password"]), htmlspecialchars($row["password_hash"]))) {
                 $_SESSION["username"] = $row["name"];
                 $_SESSION["uid"] = $row["uid"];
                 header('Location: index.php');
