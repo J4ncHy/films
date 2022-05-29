@@ -67,8 +67,7 @@ include("utils/db.php");
                 <p>Not a member? <a class="text-warning" href="register.php">Register</a></p>
             </div>
         </form>
-    </div>
-</div>
+
     <?php
     $options = [
         'cost' => 11,
@@ -83,11 +82,14 @@ include("utils/db.php");
                 $_SESSION["uid"] = $row["uid"];
                 header('Location: index.php');
             } else {
-                echo '<p style="color:red;margin-left:35%">Invalid username and password.<p>';
+                echo '<p class="h3 text-center text-danger">Invalid username and password.<p>';
             }
+        }else {
+            echo '<p class="h3 text-center text-danger">Invalid username and password.<p>';
         }
     }
     ?>
-
+    </div>
+</div>
 </body>
 </html>

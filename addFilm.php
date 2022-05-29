@@ -17,7 +17,7 @@ include("utils/db.php");
 
     <title>Movies - Add Movie</title>
 </head>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100 position-fixed justify-content-end">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark w-100 position-fixed">
     <ul class="navbar-nav mr-auto">
         <li class="navbar-item">
             <a class="nav-link" href="index.php">Home</a>

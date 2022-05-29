@@ -19,7 +19,7 @@ include("utils/DB.php")
     <title>Movies - Home</title>
 
 </head>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-end">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <ul class="navbar-nav mr-auto">
         <li class="navbar-item active">
             <a class="nav-link" href="index.php">Home</a>
@@ -76,11 +76,11 @@ include("utils/DB.php")
         
         <div class="container-lr my-3">
         <label>
-        Search bux
-        <input id="search-field" type="search" />
+            Search bux
+            <input id="search-field" class="form-control" type="search" />
         </label>
-        <button id="random-movie" value="false">Random unwatched movie</button>
-        <button id="random-movie-including" value="true">Random any movie</button>
+        <button id="random-movie" class="btn btn-primary my-2" value="false">Random unwatched movie</button>
+        <button id="random-movie-including" class="btn btn-primary my-2" value="true">Random any movie</button>
         <table id="tabelOfMovies" class="text-light">
             <th>Movie name</th>
             <th>Director</th>
@@ -178,7 +178,7 @@ include("utils/DB.php")
                 <td>${el["rt"]}</td>`;
                 (el["watched"] == 1) ? str += '<td><a class="watched" href="index.php?filmName=' + el["title"]  + '&watched=0"> &#10003 </a></td>': str += '<td><a class="notWatched" href="index.php?filmName=' + el["title"] + '&watched=1"> &#x2717 </a></td>';
                 str += '<td> <a class="notWatched" href="index.php?remove=' + el["title"]  + '"> &#x2717 </a></td>';
-                str += "</tr>"
+                str += "</tr>";
                 $("#tabelOfMovies").append(str);
             }
         );
@@ -201,7 +201,7 @@ include("utils/DB.php")
                 <td>${el["rt"]}</td>`;
                 (el["watched"] == 1) ? str += '<td><a class="watched" href="index.php?filmName=' + el["title"]  + '&watched=0"> &#10003 </a></td>': str += '<td><a class="notWatched" href="index.php?filmName=' + el["title"] + '&watched=1"> &#x2717 </a></td>';
                 str += '<td> <a class="notWatched" href="index.php?remove=' + el["title"]  + '"> &#x2717 </a></td>';
-                str += "</tr>"
+                str += "</tr>";
                 $("#tabelOfMovies").append(str);
             }
         );
